@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Tutoriels</title>
+</head>
+<body>
+    <h1>Liste des tutoriels</h1>
+    <ul>
+        {% for tuto in tutoriels %}
+        <li>
+            <h3>{{ tuto.titre }}</h3>
+            <p>{{ tuto.contenu }}</p>
+        </li>
+    {% endfor %}
+
+    </ul>
+    <a href="{% url 'index' %}"> Retour</a>
+   
+    
+</body>
+</html>

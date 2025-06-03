@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>LinuxPicker</title>
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+</head>
+<body>
+    <h1>Liste des distributions Linux</h1>
+    <ul>
+        {% for distro in distributions %}
+        <li>
+            <h3>{{ distro.nom }}</h3>
+            <img src="{{ distro.image.url }}" width="100">
+            <p>{{ distro.description }}</p>
+            <a href="{% url 'tutoriels' distro.id %}">Voir les tutoriels</a>
+        </li>
+       {% endfor %}
+    </ul>
+    
+</body>
+</html>

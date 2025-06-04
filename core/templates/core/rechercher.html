@@ -1,3 +1,6 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
 <h1 class="mb-4">Résultat de recherche</h1>
 
 <form method="get" action="{% url 'rechercher_distribution' %}" class="row g-3 mb-4">
@@ -58,3 +61,4 @@
         Aucune distribution trouvée pour "<strong>{{ query }}</strong>".
     </div>
 {% endif %}
+{% endblock %}

@@ -35,3 +35,4 @@ def rechercher_distribution(request):
         'query': query,
         'distributions': page_obj,  # On envoie l'objet paginé
     })
+       

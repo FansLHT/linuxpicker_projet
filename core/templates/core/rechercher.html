@@ -1,0 +1,16 @@
+<h1>Résultat de recherche</h1>
+
+<form method="get" action="{% url 'rechercher_distribution' %}">
+    <input type="text" name="q" placeholder="Rechercher une distribution..." value="{{ query }}">
+    <button type="submit">Rechercher</button>
+</form>
+
+{% if distributions %}
+    <ul>
+        {% for distribution in distributions %}
+            <li><a href="{% url 'distribution_detail' distribution.id %}">{{ distribution.nom }}</a></li>
+        {% endfor %}
+    </ul>
+{% elif query %}
+    <p>Aucune distribution trouvée pour "{{ query }}".</p>
+{% endif %}

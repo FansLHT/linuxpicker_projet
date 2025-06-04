@@ -11,32 +11,48 @@
 </head>
 <body class="bg-light">
 
-    <!-- Barre de navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <!-- ✅ Barre de navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'index' %}">LinuxPicker</a>
+            <!-- 🌐 Logo (facultatif) -->
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'index' %}">
+                <img src="{% static 'core/images/logo.png' %}" alt="Logo" width="30" height="30" class="me-2">
+                LinuxPicker
+            </a>
+
+            <!-- Toggle menu (responsive) -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
+            <!-- Liens -->
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'index' %}">Accueil</a>
+                        <a class="nav-link active" href="{% url 'index' %}">Accueil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">À propos</a>  <!-- Lien à personnaliser -->
+                        <a class="nav-link" href="#">À propos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>   <!-- Lien à personnaliser -->
+                        <a class="nav-link" href="#">Contact</a>
                     </li>
                 </ul>
+
+                <!-- 🔍 Champ de recherche -->
+                <form class="d-flex ms-3" role="search" method="GET" action="{% url 'rechercher_distribution' %}">
+                    <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Rechercher..." aria-label="Search">
+                    <button class="btn btn-sm btn-light" type="submit">OK</button>
+                </form>
             </div>
         </div>
     </nav>
 
-    <!-- Contenu principal -->
-    {% block content %}
-    {% endblock %}
+    <!-- ✅ Bloc de contenu -->
+    <main class="container py-4">
+        {% block content %}
+        {% endblock %}
+    </main>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

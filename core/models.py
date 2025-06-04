@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class Distribution(models.Model):
     nom = models.CharField(max_length=100, unique=True)
     descriptiion = models.TextField()
-    site_officiel = models.URLField()
+    site_officiel = models.URLField(blank=True)
     image = models.ImageField(upload_to='distributions/')
 
     def __str__(self):
@@ -22,3 +22,4 @@ class Tutoriel(models.Model):
 
     def __str__(self):
         return self.titre
+

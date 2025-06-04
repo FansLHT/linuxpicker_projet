@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator
 from .models import Distribution, Tutoriel
 
 # Page d'accueil
@@ -20,11 +21,17 @@ def distribution_detail(request, id):
         'tutoriels': tutoriels
     })
 
-# ✅ Fonction pour rechercher une distribution par nom
+# Recherche avec pagination
 def rechercher_distribution(request):
-    query = request.GET.get('q', '')  # récupération du mot-clé de recherche
-    distributions = Distribution.objects.filter(nom__icontains=query) if query else []
+    query = request.GET.get('q', '')
+    distributions_list = Distribution.objects.filter(nom__icontains=query) if query else []
+
+    # Ajout de la pagination
+    paginator = Paginator(distributions_list, 5)  # 5 distributions par page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'core/rechercher.html', {
         'query': query,
-        'distributions': distributions
+        'distributions': page_obj,  # On envoie l'objet paginé
     })

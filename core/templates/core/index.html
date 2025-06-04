@@ -3,19 +3,47 @@
 {% block title %}Accueil - LinuxPicker{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <h1 class="text-center mb-5 text-primary">Liste des distributions Linux</h1>
+<style>
+    body {
+        background: linear-gradient(to right, #f8f9fa, #e3f2fd);
+    }
+    .card {
+        border: none;
+        transition: all 0.3s ease-in-out;
+        border-radius: 1rem;
+    }
+    .card:hover {
+        box-shadow: 0 0.7rem 1.5rem rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+    }
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+    }
+     body {
+    background: linear-gradient(to right, #6e96bf8d, #4cb9607a);
+}
+   
 
-    <div class="row">
+</style>
+
+<div class="container py-5">
+    <h1 class="text-center mb-5 text-primary fw-bold">🌐 Distributions Linux</h1>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         {% for distro in distributions %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
+        <div class="col">
+            <div class="card h-100 shadow-sm bg-white">
                 <img src="{{ distro.image.url }}" class="card-img-top" alt="{{ distro.nom }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ distro.nom }}</h5>
-                    <p class="card-text">{{ distro.description|truncatechars:120 }}</p>
-                    <a href="{% url 'tutoriels' distro.id %}" class="btn btn-sm btn-outline-primary me-2">Voir les tutoriels</a>
-                    <a href="{% url 'distribution_detail' distro.id %}" class="btn btn-sm btn-primary">Voir détails</a>
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title text-primary">{{ distro.nom }}</h5>
+                    <p class="card-text text-muted small flex-grow-1">{{ distro.description|truncatechars:120 }}</p>
+                    <div class="d-flex justify-content-between mt-3">
+                        <a href="{% url 'tutoriels' distro.id %}" class="btn btn-outline-primary btn-sm">📘 Tutoriels</a>
+                        <a href="{% url 'distribution_detail' distro.id %}" class="btn btn-primary btn-sm">🔎 Détails</a>
+                    </div>
                 </div>
             </div>
         </div>

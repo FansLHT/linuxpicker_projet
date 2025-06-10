@@ -1,0 +1,144 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Contact - LinuxPicker{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 text-primary">Contactez-nous</h1>
+            <p class="lead text-muted">Une question, une suggestion ou besoin d'aide ?</p>
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="row">
+            <!-- Formulaire de contact -->
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-envelope me-2"></i>Envoyez-nous un message
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="nom" class="form-label">Nom complet *</label>
+                                    <input type="text" class="form-control" id="nom" name="nom" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Email *</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="sujet" class="form-label">Sujet *</label>
+                                <select class="form-select" id="sujet" name="sujet" required>
+                                    <option value="">Choisissez un sujet...</option>
+                                    <option value="Question générale">Question générale</option>
+                                    <option value="Problème technique">Problème technique</option>
+                                    <option value="Suggestion d'amélioration">Suggestion d'amélioration</option>
+                                    <option value="Demande de tutoriel">Demande de tutoriel</option>
+                                    <option value="Signaler un problème">Signaler un problème</option>
+                                    <option value="Autre">Autre</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Message *</label>
+                                <textarea class="form-control" id="message" name="message" rows="6" 
+                                         placeholder="Décrivez votre question ou votre message en détail..." required></textarea>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-paper-plane me-2"></i>Envoyer le message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informations complémentaires -->
+            <div class="col-md-4">
+                <!-- FAQ rapide -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0">
+                            <i class="fas fa-question-circle me-2"></i>Questions fréquentes
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <strong>Comment télécharger une distribution ?</strong>
+                            <p class="small text-muted mb-2">Recherchez la distribution souhaitée et cliquez sur le lien de téléchargement officiel.</p>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Quelle distribution choisir ?</strong>
+                            <p class="small text-muted mb-2">Pour débuter, nous recommandons Ubuntu, Linux Mint ou Pop!_OS.</p>
+                        </div>
+                        <div class="mb-0">
+                            <strong>Les tutoriels sont-ils gratuits ?</strong>
+                            <p class="small text-muted mb-0">Oui, tous nos contenus sont entièrement gratuits !</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Temps de réponse -->
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-clock fa-2x text-primary mb-2"></i>
+                        <h6>Temps de réponse</h6>
+                        <p class="small text-muted mb-0">
+                            Nous nous efforçons de répondre à tous les messages dans les 24-48 heures.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Autres moyens de contact -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <h5 class="text-primary mb-3">Autres moyens de nous contacter</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <i class="fab fa-github fa-2x text-dark mb-2"></i>
+                                <h6>GitHub</h6>
+                                <p class="small text-muted">Contribuez au projet</p>
+                            </div>
+                            <div class="col-md-4">
+                                <i class="fab fa-discord fa-2x text-primary mb-2"></i>
+                                <h6>Discord</h6>
+                                <p class="small text-muted">Rejoignez notre communauté</p>
+                            </div>
+                            <div class="col-md-4">
+                                <i class="fas fa-rss fa-2x text-warning mb-2"></i>
+                                <h6>Blog</h6>
+                                <p class="small text-muted">Suivez nos actualités</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

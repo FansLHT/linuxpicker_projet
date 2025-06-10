@@ -8,6 +8,7 @@ class Distribution(models.Model):
     descriptiion = models.TextField()
     site_officiel = models.URLField(blank=True)
     image = models.ImageField(upload_to='distributions/')
+    categorie = models.CharField(max_length=100, choices=[("Debian", "Debian-based"), ("Arch", "Arch-based"), ("RedHat", "RedHat-based")], default=1 )
 
     def __str__(self):
         return self.nom

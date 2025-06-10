@@ -6,30 +6,96 @@
     <title>{{ distribution.nom }}</title>
     <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="container mt-5">
-    <h1>{{ distribution.nom }}</h1>
-    <img src="{{ distribution.image.url }}" class="img-fluid my-3" alt="{{ distribution.nom }}">
-    <p>{{ distribution.description }}</p>
+    <h1 class="text-primary">{{ distribution.nom }}</h1>
+    <img src="{{ distribution.image.url }}" class="img-fluid my-3 rounded shadow-sm" alt="{{ distribution.nom }}">
 
-    {% if distribution.site_officiel %}
-        <p>
-            <a class="btn btn-primary" href="{{ distribution.site_officiel }}" target="_blank">Site officiel</a>
-        </p>
-    {% endif %}
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title text-primary">Description</h5>
+            <p class="card-text">{{ distribution.description }}</p>
+        </div>
+    </div>
 
-    <h2>Tutoriels associés</h2>
-    <ul>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-primary"><i class="fas fa-info-circle me-2"></i>Informations clés</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>Catégorie :</strong> <span class="badge bg-info">{{ distribution.get_categorie_display }}</span></li>
+                        <li><strong>Niveau d'expérience :</strong> <span class="badge bg-secondary">{{ distribution.get_niveau_experience_display }}</span></li>
+                        <li><strong>Usage principal :</strong> <span class="badge bg-success">{{ distribution.get_usage_principal_display }}</span></li>
+                        <li><strong>Environnement de bureau :</strong> <span class="badge bg-warning text-dark">{{ distribution.get_environnement_bureau_display }}</span></li>
+                        <li><strong>Modèle de publication :</strong> <span class="badge bg-danger">{{ distribution.get_modele_publication_display }}</span></li>
+                        <li><strong>Ressources requises :</strong> <span class="badge bg-dark">{{ distribution.get_ressources_requises_display }}</span></li>
+                        {% if distribution.site_officiel %}
+                            <li>
+                                <a href="{{ distribution.site_officiel }}" target="_blank" class="btn btn-outline-primary btn-sm mt-3">
+                                    <i class="fas fa-external-link-alt me-2"></i>Site officiel
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-primary"><i class="fas fa-download me-2"></i>Téléchargement</h5>
+                    {% if distribution.lien_telechargement_direct %}
+                        <p class="mb-2">
+                            <a class="btn btn-success me-2" href="{{ distribution.lien_telechargement_direct }}" target="_blank">
+                                <i class="fas fa-file-download me-2"></i>Téléchargement direct (.iso)
+                            </a>
+                        </p>
+                    {% endif %}
+                    {% if distribution.lien_telechargement_torrent %}
+                        <p class="mb-2">
+                            <a class="btn btn-info text-white" href="{{ distribution.lien_telechargement_torrent }}" target="_blank">
+                                <i class="fas fa-magnet me-2"></i>Lien Torrent / Magnet
+                            </a>
+                        </p>
+                    {% endif %}
+                    {% if distribution.checksum_sha256 %}
+                        <div class="alert alert-secondary mt-3 small">
+                            <p class="mb-1"><strong>Checksum SHA256 :</strong></p>
+                            <code class="d-block text-break">{{ distribution.checksum_sha256 }}</code>
+                            <p class="mb-0 mt-2">Vérifiez ce code après le téléchargement pour assurer l'intégrité du fichier.</p>
+                        </div>
+                    {% endif %}
+                    {% if not distribution.lien_telechargement_direct and not distribution.lien_telechargement_torrent %}
+                        <div class="alert alert-warning">Liens de téléchargement non disponibles pour l'instant.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <h2 class="text-primary mt-5">Tutoriels associés</h2>
+    <div class="list-group mb-4">
         {% for tuto in tutoriels %}
-            <li>
-                <h5>{{ tuto.titre }}</h5>
-                <p>{{ tuto.contenu }}</p>
-            </li>
+            <div class="list-group-item list-group-item-action flex-column align-items-start mb-2 shadow-sm">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1 text-dark">{{ tuto.titre }}</h5>
+                    <small class="text-muted">{{ tuto.date_publication|date:"d M Y" }}</small>
+                </div>
+                <p class="mb-1 text-muted">{{ tuto.contenu|truncatechars:200 }}</p>
+                {# Vous pourriez ajouter un lien vers un détail de tutoriel ici si vous en avez un #}
+                {# <a href="{% url 'tutoriel_detail' tuto.id %}" class="btn btn-outline-info btn-sm mt-2">Lire le tutoriel complet</a> #}
+            </div>
         {% empty %}
-            <li>Aucun tutoriel pour cette distribution.</li>
+            <div class="alert alert-info text-center">Aucun tutoriel n'est encore associé à cette distribution.</div>
         {% endfor %}
-    </ul>
+    </div>
 
-    <a class="btn btn-secondary mt-3" href="{% url 'index' %}">Retour à la liste</a>
+    <a class="btn btn-secondary mt-3" href="{% url 'index' %}">← Retour à la liste des distributions</a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+

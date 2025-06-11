@@ -1,0 +1,210 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Comparer des Distributions{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">Comparer des Distributions Linux</h1>
+
+    <div class="card p-4 mb-5 shadow-sm">
+        <h2 class="card-title text-center mb-4">Sélectionnez les distributions à comparer</h2>
+        <form method="post" action="{% url 'comparer_distributions' %}">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="{{ form.distribution1.id_for_label }}" class="form-label">{{ form.distribution1.label }}</label>
+                    {{ form.distribution1 }}
+                    {% if form.distribution1.errors %}
+                        <div class="text-danger small mt-1">{{ form.distribution1.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.distribution2.id_for_label }}" class="form-label">{{ form.distribution2.label }}</label>
+                    {{ form.distribution2 }}
+                    {% if form.distribution2.errors %}
+                        <div class="text-danger small mt-1">{{ form.distribution2.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.distribution3.id_for_label }}" class="form-label">{{ form.distribution3.label }}</label>
+                    {{ form.distribution3 }}
+                    {% if form.distribution3.errors %}
+                        <div class="text-danger small mt-1">{{ form.distribution3.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger mt-3" role="alert">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">Comparer !</button>
+            </div>
+        </form>
+    </div>
+
+    {% if distributions_a_comparer %}
+        <h2 class="mb-4 text-center">Comparaison Détaillée</h2>
+        {% if distributions_a_comparer|length < 2 %}
+            <div class="alert alert-warning text-center" role="alert">
+                Veuillez sélectionner au moins deux distributions différentes pour la comparaison.
+            </div>
+        {% else %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle comparison-table"> {# Ajout de la classe 'comparison-table' #}
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Caractéristique</th>
+                            {% for dist in distributions_a_comparer %}
+                                <th scope="col" class="text-center">
+                                    {# Correction : Utilisation de 'distribution_detail' #}
+                                    <a href="{% url 'distribution_detail' dist.pk %}" class="text-white text-decoration-none">
+                                        {{ dist.nom }}
+                                    </a>
+                                </th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>**Nom**</td>
+                            {% for dist in distributions_a_comparer %}
+                                <td>{{ dist.nom }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>**Description**</td>
+                            {% for dist in distributions_a_comparer %}
+                                <td>
+                                    {# Style inline pour la description #}
+                                    <div class="comparison-cell-content">
+                                        {{ dist.description }}
+                                    </div>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>**Image**</td>
+                            {% for dist in distributions_a_comparer %}
+                                <td class="text-center">
+                                    {% if dist.image %}
+                                        <img src="{{ dist.image.url }}" alt="{{ dist.nom }}" class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>**Site Officiel**</td>
+                            {% for dist in distributions_a_comparer %}
+                                <td>
+                                    {% if dist.site_officiel %}
+                                        <a href="{{ dist.site_officiel }}" target="_blank" rel="noopener noreferrer">Lien</a>
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>**Niveau d'Expérience**</td>
+                            {% for dist in distributions_a_comparer %}
+                                <td>{{ dist.get_niveau_experience_display|default:"N/A" }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>**Usage Principal**</td>
+                            {% for dist in distributions_a_comparer %}
+                                <td>{{ dist.get_usage_principal_display|default:"N/A" }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>**Environnement(s) de Bureau**</td>
+                            {% for dist in distributions_a_comparer %}
+                                <td>{{ dist.get_environnement_bureau_display|default:"N/A" }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>**Modèle de Publication**</td>
+                            {% for dist in distributions_a_comparer %}
+                                <td>{{ dist.get_modele_publication_display|default:"N/A" }}</td>
+                            {% endfor %}
+                        </tr>
+                         <tr>
+                            <td>**Ressources Matérielles Requises**</td>
+                            {% for dist in distributions_a_comparer %}
+                                <td>
+                                    {# Style inline pour les ressources #}
+                                    <div class="comparison-cell-content">
+                                        {{ dist.get_ressources_requises_display|default:"N/A" }}
+                                    </div>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>**Lien de Téléchargement Direct**</td>
+                            {% for dist in distributions_a_comparer %}
+                                <td>
+                                    {% if dist.lien_telechargement_direct %}
+                                        <a href="{{ dist.lien_telechargement_direct }}" target="_blank" rel="noopener noreferrer">Lien</a>
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>**Lien Torrent / Magnet**</td>
+                            {% for dist in distributions_a_comparer %}
+                                <td>
+                                    {% if dist.lien_telechargement_torrent %}
+                                        <a href="{{ dist.lien_telechargement_torrent }}" target="_blank" rel="noopener noreferrer">Lien</a>
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>**SHA256 Checksum**</td>
+                            {% for dist in distributions_a_comparer %}
+                                <td>
+                                    {# Style inline pour le checksum #}
+                                    <div class="comparison-cell-content text-break">
+                                        {{ dist.checksum_sha256|default:"N/A" }}
+                                    </div>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+{# Ajout du style CSS spécifique pour le tableau de comparaison #}
+<style>
+    .comparison-table .comparison-cell-content {
+        max-height: 80px; /* Limite la hauteur des cellules de description */
+        overflow-y: auto; /* Ajoute une barre de défilement si le contenu dépasse */
+        text-overflow: ellipsis; /* Ajoute des points de suspension si le texte est tronqué (visible avec overflow: hidden) */
+        /* width: 100%; */ /* Peut aider à contrôler la largeur si nécessaire */
+    }
+
+    .comparison-table td {
+        max-width: 250px; /* Limite la largeur maximale de chaque cellule de données */
+        vertical-align: top; /* Aligne le contenu en haut des cellules */
+    }
+
+    /* Ajustement pour les en-têtes pour qu'ils ne soient pas écrasés si les noms sont longs */
+    .comparison-table th {
+        white-space: normal; /* Permet aux noms des distributions de passer à la ligne */
+    }
+</style>
+
+{% endblock %}

@@ -1,9 +1,9 @@
-# core/models.py
-
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User # Assurez-vous que ceci est bien là si vous utilisez `auteur` dans Tutoriel
 
 # --- Nouvelles listes de choix pour les filtres ---
+# Ces listes sont des tuples (valeur_stockée_en_bd, nom_affiché_à_l_utilisateur)
+
 # Niveau d'expérience
 EXPERIENCE_CHOICES = [
     ("débutant", "Débutant"),
@@ -41,7 +41,6 @@ RELEASE_MODEL_CHOICES = [
 ]
 
 # Base de la distribution (votre champ existant, mais avec plus de granularité si nécessaire)
-# J'ai ajouté plus de choix ici pour l'exemple.
 CATEGORIE_CHOICES = [
     ("Debian", "Debian-based"),
     ("Ubuntu", "Ubuntu-based"), # Souvent considérée comme une catégorie à part
@@ -72,12 +71,17 @@ class Distribution(models.Model):
         default="débutant",
         verbose_name="Niveau d'expérience recommandé"
     )
+    # Pour l'usage principal, si vous voulez sélectionner PLUSIEURS usages par distribution,
+    # un ManyToManyField avec un modèle distinct serait mieux.
+    # Si c'est un usage UNIQUE par distribution, alors CharField est bon.
+    # Pour l'instant, je le laisse en CharField comme dans votre proposition.
     usage_principal = models.CharField(
         max_length=50,
         choices=USAGE_CHOICES,
         default="bureau",
         verbose_name="Usage principal"
     )
+    # Même remarque pour l'environnement de bureau si plusieurs sont possibles par défaut.
     environnement_bureau = models.CharField(
         max_length=50,
         choices=DESKTOP_ENV_CHOICES,
@@ -90,7 +94,7 @@ class Distribution(models.Model):
         default="stable",
         verbose_name="Modèle de publication"
     )
-    # Champ pour les ressources matérielles (peut être plus précis que juste "ancien_pc" dans l'usage)
+    # Champ pour les ressources matérielles
     ressources_requises = models.CharField(
         max_length=20,
         choices=[
@@ -106,10 +110,11 @@ class Distribution(models.Model):
     lien_telechargement_torrent = models.URLField(blank=True, verbose_name="Lien Torrent / Magnet")
     checksum_sha256 = models.CharField(max_length=64, blank=True, verbose_name="SHA256 Checksum")
 
-
     class Meta:
         verbose_name = "Distribution Linux"
         verbose_name_plural = "Distributions Linux"
+        # Ajout d'un tri par défaut pour la comparaison
+        ordering = ['nom']
 
     def __str__(self):
         return self.nom
@@ -118,14 +123,17 @@ class Distribution(models.Model):
 class Tutoriel(models.Model):
     titre = models.CharField(max_length=200)
     contenu = models.TextField()
-    Distribution = models.ForeignKey(Distribution, on_delete=models.CASCADE, related_name='tutoriels')
+    # Note : Le "D" majuscule de Distribution est une convention Python pour les classes.
+    # Dans les relations ForeignKey, c'est généralement le nom de la classe.
+    # Je suppose que Distribution est la classe de votre modèle de distribution.
+    distribution = models.ForeignKey(Distribution, on_delete=models.CASCADE, related_name='tutoriels')
     date_publication = models.DateTimeField(auto_now_add=True)
-    auteur = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    auteur = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True) # Ajout de blank=True
 
     class Meta:
         verbose_name = "Tutoriel"
         verbose_name_plural = "Tutoriels"
+        ordering = ['-date_publication'] # Tri par défaut
 
     def __str__(self):
         return self.titre
-

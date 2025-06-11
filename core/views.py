@@ -8,6 +8,7 @@ from .forms import DistributionFilterForm, QuizForm # Importez les nouveaux form
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
+from .forms import ComparaisonForm
 
 # --- Vue pour la liste des distributions avec filtrage avancé ---
 def index(request):
@@ -115,7 +116,7 @@ def quiz_recommandation(request):
 
 # Liste des tutoriels d'une distribution
 def tutoriels(request, dist_id):
-    tutoriels = Tutoriel.objects.filter(Distribution__id=dist_id)
+    tutoriels = Tutoriel.objects.filter(distribution__id=dist_id)
     return render(request, 'core/tutoriels.html', {'tutoriels': tutoriels})
 
 # Détail d'une distribution (modifié pour afficher les nouvelles infos de DL)
@@ -171,3 +172,41 @@ def contact(request):
             messages.error(request, 'Veuillez remplir tous les champs.')
 
     return render(request, 'core/contact.html')
+
+
+def comparer_distributions(request):
+    distributions_a_comparer = []
+    if request.method == 'POST':
+        form = ComparaisonForm(request.POST)
+        if form.is_valid():
+            # Récupérer les IDs des distributions sélectionnées
+            dist_id1 = form.cleaned_data['distribution1'].id
+            dist_id2 = form.cleaned_data['distribution2'].id
+            dist_id3 = form.cleaned_data['distribution3'].id if form.cleaned_data['distribution3'] else None
+
+            # Récupérer les objets Distribution correspondant aux IDs
+            # Utilisation de Q pour éviter les doublons dans les IDs si l'utilisateur sélectionne la même distribution plusieurs fois
+            q_objects = Q(pk=dist_id1) | Q(pk=dist_id2)
+            if dist_id3:
+                q_objects |= Q(pk=dist_id3)
+
+            distributions_a_comparer = Distribution.objects.filter(q_objects).distinct()
+
+            # S'assurer qu'il y a au moins 2 distributions uniques
+            if len(distributions_a_comparer) < 2:
+                # Gérer le cas où moins de 2 distributions uniques ont été sélectionnées
+                # Par exemple, ajouter un message d'erreur au formulaire ou rediriger
+                form.add_error(None, "Veuillez sélectionner au moins deux distributions différentes pour la comparaison.")
+                distributions_a_comparer = [] # Vider la liste pour ne pas afficher de comparaison incomplète
+        else:
+            # Le formulaire n'est pas valide (e.g., champs requis non remplis)
+            pass # Les erreurs du formulaire seront affichées automatiquement dans le template
+    else:
+        form = ComparaisonForm()
+
+    context = {
+        'form': form,
+        'distributions_a_comparer': distributions_a_comparer,
+    }
+    return render(request, 'core/comparer_distributions.html', context)
+

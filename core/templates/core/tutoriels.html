@@ -1,40 +1,59 @@
+{% extends 'core/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Tutoriels</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+{% block title %}Tutoriels - LinuxPicker{% endblock %}
 
-    <!-- Ton CSS perso si besoin -->
-    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
-</head>
-<body class="bg-light">
+{% block content %}
 
-    <div class="container py-5">
-        <h1 class="text-center text-success mb-4">Liste des tutoriels</h1>
+<div class="container py-5">
+    <h1 class="text-center text-primary mb-5 fw-bold">📚 Tous nos tutoriels Linux</h1>
 
-        <div class="row">
+    {% if tutoriels %}
+        <div class="row row-cols-1 row-cols-md-2 g-4"> {# Moins de colonnes pour plus d'espace pour le contenu #}
             {% for tuto in tutoriels %}
-            <div class="col-md-6 mb-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ tuto.titre }}</h5>
-                        <p class="card-text">{{ tuto.contenu }}</p>
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-success mb-2">{{ tuto.titre }}</h5>
+                        <h6 class="card-subtitle mb-3 text-muted small">
+                            Par {{ tuto.auteur }} | Publié le {{ tuto.date_publication|date:"d M Y" }}
+                        </h6>
+                        <hr> {# Ligne de séparation pour le contenu #}
+                        {# AFFICHAGE DU CONTENU COMPLET ICI, SANS TRONCATURE #}
+                        <p class="card-text text-secondary flex-grow-1">
+                            {{ tuto.contenu|linebreaksbr|default:"Pas de contenu disponible pour ce tutoriel." }}
+                        </p>
+                        
+                        {# Afficher la distribution associée si elle existe #}
+                        {% if tuto.distribution %}
+                            <div class="mt-auto pt-3 border-top"> {# Marge auto en haut, padding top et bordure #}
+                                <a href="{% url 'distribution_detail' tuto.distribution.pk %}" class="btn btn-sm btn-outline-info">
+                                    <i class="fas fa-desktop me-2"></i>Pour {{ tuto.distribution.nom }}
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
 
-        <div class="text-center mt-5">
-            <a href="{% url 'index' %}" class="btn btn-outline-secondary">← Retour à la liste des distributions</a>
-        </div>
-    </div>
+        {# Pagination ici si nécessaire #}
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    {% else %}
+        <div class="alert alert-info text-center" role="alert">
+            Aucun tutoriel n'est disponible pour le moment.
+        </div>
+    {% endif %}
+
+    <div class="text-center mt-5">
+        <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-lg">
+            <i class="fas fa-arrow-left me-2"></i>Retour à l'accueil
+        </a>
+    </div>
+</div>
+
+{# Les styles de troncature ne sont plus nécessaires sur cette page car le contenu est complet #}
+{# Mais si vous aviez d'autres styles spécifiques, ils pourraient rester ici ou dans style.css #}
+
+{% endblock content %}

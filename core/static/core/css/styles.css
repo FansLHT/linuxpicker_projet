@@ -1,0 +1,144 @@
+/* Effet hover carte */
+.hover-shadow:hover {
+    box-shadow: 0 0.5rem 1.2rem rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+    transition: all 0.3s ease-in-out;
+}
+.transition {
+    transition: all 0.3s ease-in-out;
+}
+
+/* core/static/core/css/style.css */
+
+/* Corps de la page */
+body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    background-color: #f8f9fa; /* Couleur de fond légère */
+    color: #343a40; /* Couleur de texte par défaut */
+}
+
+/* Navbar personnalisée */
+.navbar {
+    border-bottom: 3px solid #007bff; /* Bordure inférieure de couleur primaire */
+    box-shadow: 0 2px 4px rgba(0,0,0,.08); /* Petite ombre */
+}
+
+/* Titres H1, H2, etc. */
+h1, h2, h3 {
+    color: #0056b3; /* Une nuance de bleu plus foncée */
+    font-weight: 600; /* Plus gras */
+    margin-bottom: 1.5rem; /* Espace en dessous */
+}
+
+/* Cartes (utilisées par exemple pour les distributions) */
+.card {
+    border-radius: 0.75rem; /* Coins plus arrondis */
+    overflow: hidden; /* Pour que les images ne débordent pas */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Animation au survol */
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Remonte légèrement au survol */
+    box-shadow: 0 8px 16px rgba(0,0,0,.15) !important; /* Ombre plus prononcée au survol */
+}
+
+.card-img-top {
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Texte tronqué (pour les descriptions de cartes) */
+.text-truncate-3-lines {
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Nombre de lignes */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Boutons personnalisés */
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+.btn-outline-primary {
+    color: #007bff;
+    border-color: #007bff;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Formulaires */
+.form-control, .form-select {
+    border-radius: 0.5rem;
+}
+
+/* Pied de page */
+footer {
+    background-color: #343a40; /* Fond foncé */
+    color: #e9ecef; /* Texte clair */
+    padding: 2rem 0;
+    margin-top: 5rem; /* Espace au-dessus du footer */
+}
+
+footer a {
+    color: #adb5bd; /* Liens gris clair */
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: #fff; /* Liens blancs au survol */
+}
+
+/* Tableau de comparaison (amélioration des styles existants) */
+.comparison-table {
+    border-radius: 0.75rem;
+    overflow: hidden; /* Important pour les coins arrondis et l'ombre */
+    box-shadow: 0 4px 8px rgba(0,0,0,.08);
+}
+
+.comparison-table th, .comparison-table td {
+    padding: 1rem;
+    border-color: #dee2e6;
+}
+
+.comparison-table thead th {
+    background-color: #343a40;
+    color: #fff;
+    border-color: #495057;
+}
+
+/* Scrollbar personnalisée (WebKit - Chrome, Safari) */
+.comparison-cell-content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.comparison-cell-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.comparison-cell-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.comparison-cell-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

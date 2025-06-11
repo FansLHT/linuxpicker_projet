@@ -28,7 +28,7 @@ Suivez ces étapes pour configurer et lancer le projet LinuxPicker sur votre mac
 
 1.  **Cloner le dépôt :**
     ```bash
-    git clone [https://github.com/VotreNomUtilisateur/linuxpicker_projet.git](https://github.com/VotreNomUtilisateur/linuxpicker_projet.git)
+    git clone [https://github.com/FansLHT/linuxpicker_projet.git](https://github.com/FansLHT/linuxpicker_projet.git)
     cd linuxpicker_projet
     ```
     *(Remplacez `VotreNomUtilisateur` par votre nom d'utilisateur GitHub/GitLab)*

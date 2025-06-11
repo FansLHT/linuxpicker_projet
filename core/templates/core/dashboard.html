@@ -1,0 +1,113 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Tableau de Bord - LinuxPicker{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">Tableau de Bord LinuxPicker</h1>
+
+    <div class="row g-4">
+        {# Carte Total Distributions #}
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-white bg-primary mb-3 h-100 shadow-sm">
+                <div class="card-header">Distributions</div>
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Distributions</h5>
+                    <p class="card-text fs-1">{{ total_distributions }}</p>
+                </div>
+            </div>
+        </div>
+
+        {# Carte Total Tutoriels #}
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-white bg-success mb-3 h-100 shadow-sm">
+                <div class="card-header">Tutoriels</div>
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Tutoriels</h5>
+                    <p class="card-text fs-1">{{ total_tutoriels }}</p>
+                </div>
+            </div>
+        </div>
+
+        {# Carte Stats Environnement de Bureau #}
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-info mb-3 h-100 shadow-sm">
+                <div class="card-header bg-info text-white">Environnements de Bureau</div>
+                <div class="card-body">
+                    <h5 class="card-title text-info">Distributions par DE</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for stat in env_stats %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ stat.label }}
+                                <span class="badge bg-info rounded-pill">{{ stat.count }}</span>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">Aucune donnée</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {# Carte Stats Niveau d'Expérience #}
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-warning mb-3 h-100 shadow-sm">
+                <div class="card-header bg-warning text-white">Niveaux d'Expérience</div>
+                <div class="card-body">
+                    <h5 class="card-title text-warning">Distributions par Expérience</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for stat in exp_stats %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ stat.label }}
+                                <span class="badge bg-warning rounded-pill">{{ stat.count }}</span>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">Aucune donnée</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {# Carte Dernières Distributions Ajoutées #}
+        <div class="col-lg-6">
+            <div class="card mb-3 h-100 shadow-sm">
+                <div class="card-header bg-light">Dernières Distributions Ajoutées</div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for dist in latest_distributions %}
+                            <li class="list-group-item">
+                                <a href="{% url 'distribution_detail' dist.pk %}">{{ dist.nom }}</a>
+                                <small class="text-muted d-block">{{ dist.description|truncatechars:100 }}</small>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">Aucune distribution récente.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {# Carte Derniers Tutoriels Ajoutés #}
+        <div class="col-lg-6">
+            <div class="card mb-3 h-100 shadow-sm">
+                <div class="card-header bg-light">Derniers Tutoriels Ajoutés</div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for tutoriel in latest_tutoriels %}
+                            <li class="list-group-item">
+                                <a href="{% url 'tutoriels' tutoriel.pk %}">{{ tutoriel.titre }}</a>
+                                <small class="text-muted d-block">Publié le {{ tutoriel.date_publication|date:"d M Y" }}</small>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">Aucun tutoriel récent.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>{# End row #}
+
+</div>{# End container #}
+{% endblock %}

@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from .forms import ComparaisonForm
+from django.db.models import Count 
 
 # --- Vue pour la liste des distributions avec filtrage avancé ---
 def index(request):
@@ -209,4 +210,49 @@ def comparer_distributions(request):
         'distributions_a_comparer': distributions_a_comparer,
     }
     return render(request, 'core/comparer_distributions.html', context)
+
+
+# --- Vue pour le tableau de bord ---
+def dashboard(request):
+    # Optionnel: si vous voulez que le dashboard soit accessible uniquement aux utilisateurs connectés
+    # @login_required
+    # def dashboard(request):
+
+    total_distributions = Distribution.objects.count()
+    total_tutoriels = Tutoriel.objects.count()
+
+    # Statistiques sur les environnements de bureau
+    # group_by_env = Distribution.objects.values('environnement_bureau').annotate(count=Count('environnement_bureau')).order_by('-count')
+    # Pour afficher les noms lisibles au lieu des valeurs stockées :
+    env_stats_raw = Distribution.objects.values('environnement_bureau').annotate(count=Count('environnement_bureau')).order_by('-count')
+    env_stats = []
+    for stat in env_stats_raw:
+        # Obtenez le libellé lisible pour chaque valeur
+        env_label = dict(Distribution._meta.get_field('environnement_bureau').choices).get(stat['environnement_bureau'], stat['environnement_bureau'])
+        env_stats.append({'label': env_label, 'count': stat['count']})
+
+    # Statistiques sur les niveaux d'expérience
+    exp_stats_raw = Distribution.objects.values('niveau_experience').annotate(count=Count('niveau_experience')).order_by('-count')
+    exp_stats = []
+    for stat in exp_stats_raw:
+        exp_label = dict(Distribution._meta.get_field('niveau_experience').choices).get(stat['niveau_experience'], stat['niveau_experience'])
+        exp_stats.append({'label': exp_label, 'count': stat['count']})
+
+
+    # Les 5 dernières distributions ajoutées
+    latest_distributions = Distribution.objects.order_by('-id')[:5] # Ou par date_ajout si vous en avez une
+
+    # Les 5 derniers tutoriels ajoutés
+    latest_tutoriels = Tutoriel.objects.order_by('-date_publication')[:5]
+
+    context = {
+        'total_distributions': total_distributions,
+        'total_tutoriels': total_tutoriels,
+        'env_stats': env_stats,
+        'exp_stats': exp_stats,
+        'latest_distributions': latest_distributions,
+        'latest_tutoriels': latest_tutoriels,
+    }
+    return render(request, 'core/dashboard.html', context)
+
 

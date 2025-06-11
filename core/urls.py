@@ -16,6 +16,7 @@ urlpatterns = [
     path('quiz/', quiz_recommandation, name='quiz_recommandation'), # Nouvelle URL pour le quizz
     path('contact/', views.contact, name='contact'),
     path('a-propos/', views.a_propos, name='a_propos'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 
     # Nouvelle URL pour la comparaison
     path('comparer/', views.comparer_distributions, name='comparer_distributions'),
